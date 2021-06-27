@@ -40,25 +40,22 @@ def accept_chat_socket():
     except socket.error as err:
         print(f"Cannot connect to the client")
 
-def send_message(cli_socket):
+def send_chat(cli_socket):
     global s
     while True:
-        try:
-            chat_message = input("Send message: ")
-            encoded_chat_message = bytes(chat_message, 'utf-8')
-            if 'bye' in chat_message:
+        chat_message = input("Send message: ")
+        encoded_chat_message = bytes(chat_message, 'utf-8')
+        if len(encoded_chat_message) > 0:
+            cli_socket.send(encoded_chat_message)
+
+            reply = cli_socket.recv(1024)
+            decoded_reply = str(reply, 'utf-8')
+            if 'bye' in decoded_reply:
                 cli_socket.close()
                 s.close()
                 sys.exit()
 
-            if len(encoded_chat_message) > 0:
-                reply = cli_socket.recv(1024)
-                decoded_reply = reply.decode('utf-8')
-
-                print(decoded_reply)
-
-        except socket.error as err:
-            print(f"Error in sending the message: {err}")
+            print(decoded_reply)
 
 if __name__ == '__main__':
     create_chat_socket()
