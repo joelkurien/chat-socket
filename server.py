@@ -12,22 +12,8 @@ class Chat_Server:
         self.bind_chat_socket()
         self.accept_chat_socket()
 
-    # def create_chat_socket():
-    #     try:
-    #         global host
-    #         global port
-    #         global s
-    #
-    #         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #         host = socket.gethostname()
-    #         port = 5000
-    #
-    #     except socket.error as err:
-    #         print(f"Socket cannot be created {err}")
-
     def bind_chat_socket(self):
         try:
-
             self.s.bind((self.host, self.port))
             self.s.listen((4))
 
@@ -37,7 +23,6 @@ class Chat_Server:
             print(f'Cannot bind on {self.port}')
 
     def send_chat(self, cli_socket):
-        #global s
         while True:
             chat_message = input("Send message: ")
             encoded_chat_message = bytes(chat_message, 'utf-8')
@@ -54,7 +39,6 @@ class Chat_Server:
                 print(decoded_reply)
 
     def accept_chat_socket(self):
-        #global s
         try:
             cli_socket, addr = self.s.accept()
             self.send_chat(cli_socket)
@@ -67,5 +51,3 @@ class Chat_Server:
 
 if __name__ == '__main__':
     chat = Chat_Server()
-    # chat.bind_chat_socket()
-    # chat.accept_chat_socket()
