@@ -1,5 +1,5 @@
 # chat-socket
-client-to-client chat application,
+Client-To-Client chat application,
 - Where one client can chat with another client with the help of sockets
 
 #Development steps and PTP Goals
