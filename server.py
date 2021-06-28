@@ -2,7 +2,10 @@
 import socket
 import sys
 
-class Chat_Server:
+class ChatServer:
+    allConnections = []
+    __allAddresses = [] #just for the developer
+    allNames = []
 
     def __init__(self):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,23 +27,28 @@ class Chat_Server:
 
     def send_chat(self, cli_socket):
         while True:
-            chat_message = input("Send message: ")
-            encoded_chat_message = bytes(chat_message, 'utf-8')
-            if len(encoded_chat_message) > 0:
-                cli_socket.send(encoded_chat_message)
+            if cli_socket == self.s:
+                print('Hello')
+            reply = cli_socket.recv(1024)
+            decoded_reply = str(reply, 'utf-8')
+            if 'bye' in decoded_reply:
+                cli_socket.close()
+                self.s.close()
+                sys.exit()
 
-                reply = cli_socket.recv(1024)
-                decoded_reply = str(reply, 'utf-8')
-                if 'bye' in decoded_reply:
-                    cli_socket.close()
-                    self.s.close()
-                    sys.exit()
+            print(decoded_reply)
 
-                print(decoded_reply)
-
+    #Connecting all the clients to the server
     def accept_chat_socket(self):
         try:
             cli_socket, addr = self.s.accept()
+            self.allConnections.append(cli_socket)
+            self.__allAddresses.append(addr)
+
+            usrName = cli_socket.recv(1024)
+            decoded_usrName = str(usrName, 'utf-8')
+            self.allNames.append(decoded_usrName)
+
             self.send_chat(cli_socket)
             print(f'Connected to {addr}')
             cli_socket.close()
@@ -48,6 +56,5 @@ class Chat_Server:
         except socket.error as err:
             print(f"Cannot connect to the client")
 
-
 if __name__ == '__main__':
-    chat = Chat_Server()
+    chat = ChatServer()

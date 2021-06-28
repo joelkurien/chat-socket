@@ -8,14 +8,15 @@ port = 5000
 
 s.connect((host, port))
 
-while True:
-    response = s.recv(1024)
-    decoded_response = str(response, 'utf-8')
+userName = input("Name: ")
+encoded_userName = bytes(userName, 'utf-8')
 
-    print(decoded_response)
+if len(encoded_userName) > 0:
+    s.send(encoded_userName)
 
-    new_chat_message = input('Send the message: ')
-    encoded_chat_message = new_chat_message.encode('utf-8')
+    while True:
+        new_chat_message = input(f'{userName}: ')
+        encoded_chat_message = new_chat_message.encode('utf-8')
 
-    if len(encoded_chat_message) > 0:
-        s.send(encoded_chat_message)
+        if len(encoded_chat_message) > 0:
+            s.send(encoded_chat_message)
